@@ -39,7 +39,7 @@ jobs:
   generate-and-deploy-docs:
     name: Generate and Deploy Docs
     runs-on: ubuntu-latest
-    needs: [test, fmt, clippy, cargo-audit]
+    needs: [test, fmt, clippy]
     steps:
       - uses: actions/checkout@v4
         with:
