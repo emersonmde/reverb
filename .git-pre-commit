@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Stop on first error
+set -e
+
+# Run Cargo clippy
+echo "Running cargo clippy..."
+cargo clippy --all-targets --all-features -- -D warnings
+
+# Check formatting
+echo "Checking cargo fmt..."
+cargo fmt -- --check
+
+# Run tests
+echo "Running cargo test..."
+cargo test
+cargo test --all-targets --all-features
+
+# Check for security vulnerabilities and yanked crates
+echo "Running cargo audit..."
+cargo audit || true
+
+# Check for outdated dependencies but don't fail if there are any
+echo "Checking for outdated dependencies..."
+cargo outdated -R || true
+
+# If all commands succeed, allow the commit to proceed
+exit 0

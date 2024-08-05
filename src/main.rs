@@ -5,11 +5,11 @@ use std::time::Duration;
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
-use log::{info};
+use log::info;
 use russh::server::{Auth, Server as _, Session as ServerSession};
 use russh::*;
 use russh_keys::*;
-use tokio::io::{AsyncWriteExt};
+use tokio::io::AsyncWriteExt;
 use tokio::net::ToSocketAddrs;
 
 #[derive(Parser, Debug)]
@@ -139,7 +139,10 @@ impl server::Handler for ServerHandler {
         let response = format!("Server processed: {}", received_str);
         info!("Server: Sending response to client: {}", response);
 
-        session.data(channel, russh::CryptoVec::from(response.as_bytes().to_vec()));
+        session.data(
+            channel,
+            russh::CryptoVec::from(response.as_bytes().to_vec()),
+        );
 
         Ok(())
     }
@@ -211,7 +214,10 @@ impl Session {
             };
             match msg {
                 ChannelMsg::Data { ref data } => {
-                    info!("Client: Received data from server: {:?}", String::from_utf8_lossy(data));
+                    info!(
+                        "Client: Received data from server: {:?}",
+                        String::from_utf8_lossy(data)
+                    );
                     stdout.write_all(data).await?;
                     stdout.flush().await?;
                     received_data.extend_from_slice(data);
